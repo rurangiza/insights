@@ -1,0 +1,5 @@
+
+    This is a random note
+    
+    it's purpose is to test the generate button in the notes page.
+    
