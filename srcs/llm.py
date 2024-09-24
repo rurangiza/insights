@@ -53,3 +53,10 @@ class LLM:
                 print(chunk.content, end="", flush=True)
         
         return response
+
+    async def astream(self, question: str, streamlit_container = None, display_func = None) -> str:
+        """ Stream answer ASYNChronously """
+        for chunk in self._llm.stream(question):
+            yield chunk.content
+            # response += chunk.content
+            # chunks.append(chunk)

@@ -12,8 +12,8 @@ st.session_state.saved = "In entrypoing.py"
 st.logo("./assets/google-logo.webp")
 
 pages = [
-    st.Page(DIR + "notes.py", title="Notes", default=True),
-    st.Page(DIR + "chat.py", title="Chat"),
+    st.Page(DIR + "chat.py", title="Chat", default=True),
+    st.Page(DIR + "notes.py", title="Notes"),
 ]
 pg = st.navigation(pages)
 

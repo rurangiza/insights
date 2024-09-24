@@ -3,10 +3,12 @@ import streamlit as st
 from time import perf_counter, sleep
 from srcs.llm import LLM
 from uuid import uuid4 as uuid
+import asyncio
+
 
 ### Function definitions
 
-def answer_question(question: str):
+def answer_question(question: str, streaming = True):
     with st.chat_message('human'):
         st.session_state.chat_history.append({'role': 'human', 'content': question})
         st.write(question)
@@ -14,17 +16,20 @@ def answer_question(question: str):
         with st.spinner('Thinking..'):
 
             placeholder = st.empty()
-            sync_response = llm.stream(question, placeholder)
+            if streaming:
+                response = llm.astream(question, placeholder)
+                async def print_async_content(response, container):
+                    chunks = ""
+                    async for chunk in response:
+                        chunks += chunk
+                        container.markdown(chunks)
+                asyncio.run(print_async_content(response, placeholder))
+            
+            else:
+                response: str = llm.stream(question, placeholder)
 
-            # chunks = []
-            # for chunk in llm.stream("what color is the sky?"):
-            #     chunks.append(chunk)
-            #     # print(chunk.content, end="|", flush=True)
-            #     st.write(chunk.content)
-
-            # response = llm.invoke(question)
-            st.session_state.chat_history.append({'role': 'ai', 'content': sync_response})
-            # st.write(response)
+            st.session_state.chat_history.append({'role': 'ai', 'content': response})
+            st.write(response)
     return 'All Good!'
 
 
